@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-genie-off text-ink-800 font-sans antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .dark body {
+    @apply bg-ink-900 text-ink-100;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply font-display text-ink-900 dark:text-white;
+  }
+
+  ::selection {
+    @apply bg-genie-blue/20 text-genie-navy dark:text-white;
+  }
+
+  /* Slim, themed scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #c2cfdb transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+  *::-webkit-scrollbar-thumb {
+    @apply bg-ink-300 dark:bg-ink-700;
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    @apply bg-ink-400;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .surface {
+    @apply bg-white border border-ink-200/70 rounded-2xl shadow-soft dark:bg-ink-800 dark:border-ink-700;
+  }
+
+  .label {
+    @apply block text-sm font-semibold text-ink-700 dark:text-ink-200 mb-1.5;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-ink-200 bg-white px-4 py-2.5 text-sm text-ink-800
+      placeholder:text-ink-400 outline-none transition
+      focus:border-genie-blue focus:ring-4 focus:ring-genie-blue/15
+      disabled:cursor-not-allowed disabled:bg-ink-50 disabled:text-ink-400
+      dark:bg-ink-900 dark:border-ink-700 dark:text-ink-100 dark:placeholder:text-ink-500
+      dark:focus:border-brand-400 dark:focus:ring-brand-400/20;
+  }
+
+  .link-underline {
+    @apply relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0
+      after:bg-genie-blue after:transition-all after:duration-300 hover:after:w-full;
+  }
+
+  .code-scroll::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .grid-bg {
+    background-image: linear-gradient(to right, rgba(23, 59, 99, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(23, 59, 99, 0.06) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+
+  .dark .grid-bg {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

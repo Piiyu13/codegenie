@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-codegenie}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-codegenie}
+      - POSTGRES_DB=${POSTGRES_DB:-codegenie}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-codegenie}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: ./backend/.env
+        required: false
+    environment:
+      # Docker DNS name of the db service.
+      - POSTGRES_HOST=db
+      # Single source for db credentials: root .env / host env (compose
+      # `environment` wins over backend/.env, so both services stay in sync).
+      - POSTGRES_USER=${POSTGRES_USER:-codegenie}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-codegenie}
+      - POSTGRES_DB=${POSTGRES_DB:-codegenie}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      # Browser calls the backend directly, so this must be reachable from the host.
+      - VITE_AI_API_BASE_URL=http://localhost:8000
+      - VITE_AI_MODEL=code-genie-default
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+
+volumes:
+  pgdata:
